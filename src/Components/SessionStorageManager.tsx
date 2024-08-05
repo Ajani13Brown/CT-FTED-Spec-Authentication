@@ -1,34 +1,44 @@
-import axios from 'axios'
-import React from 'react'
+import axios from 'axios';
+import React from 'react';
 
-export const getUser = async () => {
-    const token = sessionStorage.getItem('JWT')
-    const response = await axios.get('https://dummyjson.com/auth/me', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    return response.data
-}
+export const getUser = async (): Promise<any> => {
+    const token = sessionStorage.getItem('JWT');
+    if (!token) {
+        throw new Error('No JWT token found in sessionStorage');
+    }
+    try {
+        const response = await axios.get('https://dummyjson.com/auth/me', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+    }
+};
 
-export const savetoken = (token:string) => {
-  sessionStorage.setItem('JWT', token)
-}
 
+export const savetoken = (token: string): void => {
+    sessionStorage.setItem('JWT', token);
+};
 
 export const getToken = (): string | null => {
     return sessionStorage.getItem('JWT');
-  };
+};
 
-export const logout = sessionStorage.clear()
 
+export const logout = (): void => {
+    sessionStorage.clear();
+};
 
 
 const SessionStorageManager = () => {
+    return (
+        <div>SessionStorageManager</div>
+    );
+};
 
-  return (
-    <div>SessionStorageManager</div>
-  )
-}
-
-export default SessionStorageManager
+export default SessionStorageManager;
